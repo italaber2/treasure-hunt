@@ -1,0 +1,197 @@
+import React, { useState, useEffect } from 'react';
+import { CheckCircle, XCircle, Map } from 'lucide-react';
+
+const TreasureHunt = () => {
+  const [answer, setAnswer] = useState('');
+  const [showImage, setShowImage] = useState(false);
+  const [error, setError] = useState('');
+  const [currentLocation, setCurrentLocation] = useState(null);
+
+  // Configure your treasure hunt locations here
+  // Each location will have its own URL: /#location1, /#location2, etc.
+  const locations = {
+    location1: {
+      question: "What's my favourite colour?",
+      answer: "blue",
+      imageUrl: "https://images.unsplash.com/photo-1519974719765-e6559eac2575?w=800",
+      imageAlt: "Next location clue",
+      locationName: "Location 1",
+      nextLocation: "location2"
+    },
+    location2: {
+      question: "What's my favourite fruit?",
+      answer: "watermelon",
+      imageUrl: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+      imageAlt: "Next location clue",
+      locationName: "Location 2",
+      nextLocation: "location3"
+    },
+    location3: {
+      question: "What's my favourite drink?",
+      answer: "dirty chai latte",
+      imageUrl: "https://images.unsplash.com/photo-1511593358241-7eea1f3c84e5?w=800",
+      imageAlt: "Next location clue",
+      locationName: "Location 3",
+      nextLocation: "location4"
+    },
+    location4: {
+      question: "What's my favourite Disney movie?",
+      answer: "Atlantis",
+      imageUrl: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800",
+      imageAlt: "Final treasure location!",
+      locationName: "Final Location",
+      nextLocation: null // null means this is the last location
+    }
+  };
+
+  // Get location from URL hash
+  useEffect(() => {
+    const getLocationFromUrl = () => {
+      const hash = window.location.hash.slice(1); // Remove the #
+      return hash || 'location1'; // Default to location1 if no hash
+    };
+
+    setCurrentLocation(getLocationFromUrl());
+
+    // Listen for hash changes
+    const handleHashChange = () => {
+      setCurrentLocation(getLocationFromUrl());
+      setShowImage(false);
+      setAnswer('');
+      setError('');
+    };
+
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const currentLoc = locations[currentLocation];
+    
+    if (answer.toLowerCase().trim() === currentLoc.answer.toLowerCase()) {
+      setShowImage(true);
+      setError('');
+    } else {
+      setError('Incorrect answer. Try again!');
+      setAnswer('');
+    }
+  };
+
+  // Show loading state while determining location
+  if (!currentLocation || !locations[currentLocation]) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-amber-50 to-orange-100 flex items-center justify-center">
+        <div className="text-center">
+          <Map className="w-16 h-16 mx-auto mb-4 text-amber-700 animate-pulse" />
+          <p className="text-xl text-amber-900">Loading location...</p>
+        </div>
+      </div>
+    );
+  }
+
+  const currentLoc = locations[currentLocation];
+  const isLastLocation = !currentLoc.nextLocation;
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 to-orange-100 p-4">
+      <div className="max-w-2xl mx-auto">
+        {/* Header */}
+        <div className="text-center mb-8 pt-8">
+          <Map className="w-16 h-16 mx-auto mb-4 text-amber-700" />
+          <h1 className="text-4xl font-bold text-amber-900 mb-2">Treasure Hunt</h1>
+          <p className="text-amber-700">{currentLoc.locationName}</p>
+        </div>
+
+        {!showImage ? (
+          /* Question Card */
+          <div className="bg-white rounded-2xl shadow-xl p-8 mb-6">
+            <h2 className="text-2xl font-bold text-gray-800 mb-6">
+              Answer the riddle to reveal your next clue
+            </h2>
+            
+            <div className="bg-amber-50 border-l-4 border-amber-500 p-6 mb-6 rounded">
+              <p className="text-lg text-gray-700 leading-relaxed">
+                {currentLoc.question}
+              </p>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Your Answer
+                </label>
+                <input
+                  type="text"
+                  value={answer}
+                  onChange={(e) => setAnswer(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && handleSubmit(e)}
+                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition"
+                  placeholder="Enter your answer..."
+                  autoFocus
+                />
+              </div>
+
+              {error && (
+                <div className="flex items-center gap-2 text-red-600 bg-red-50 p-3 rounded-lg">
+                  <XCircle className="w-5 h-5" />
+                  <span>{error}</span>
+                </div>
+              )}
+
+              <button
+                onClick={handleSubmit}
+                className="w-full bg-amber-600 hover:bg-amber-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-200 shadow-lg"
+              >
+                Submit Answer
+              </button>
+            </div>
+          </div>
+        ) : (
+          /* Success & Image Card */
+          <div className="bg-white rounded-2xl shadow-xl p-8 mb-6">
+            <div className="flex items-center gap-3 mb-6 text-green-600">
+              <CheckCircle className="w-8 h-8" />
+              <h2 className="text-2xl font-bold">Correct!</h2>
+            </div>
+
+            <p className="text-gray-700 mb-6 text-lg">
+              {isLastLocation 
+                ? "🎉 Congratulations! You've found the treasure!" 
+                : "Here's your clue to find the next location. Look for the QR code!"}
+            </p>
+
+            <div className="mb-6 rounded-xl overflow-hidden shadow-lg">
+              <img
+                src={currentLoc.imageUrl}
+                alt={currentLoc.imageAlt}
+                className="w-full h-auto"
+              />
+            </div>
+
+            {!isLastLocation && (
+              <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded">
+                <p className="text-blue-800 font-medium">
+                  📍 Use the clue in the image to find the next location and scan the QR code there!
+                </p>
+              </div>
+            )}
+
+            {isLastLocation && (
+              <div className="text-center p-6 bg-gradient-to-r from-amber-400 to-orange-500 rounded-lg">
+                <p className="text-white text-2xl font-bold mb-2">
+                  🏆 Treasure Found!
+                </p>
+                <p className="text-white">
+                  You've completed the treasure hunt!
+                </p>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default TreasureHunt;
