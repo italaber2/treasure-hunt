@@ -10,36 +10,28 @@ const TreasureHunt = () => {
   // Configure your treasure hunt locations here
   // Each location will have its own URL: /#location1, /#location2, etc.
   const locations = {
-    location1: {
+    theSpot: {
       question: "What's my favourite colour?",
       answer: "blue",
       imageUrl: "https://images.unsplash.com/photo-1519974719765-e6559eac2575?w=800",
-      imageAlt: "Next location clue",
-      locationName: "Location 1",
-      nextLocation: "location2"
+      nextLocation: "theBench"
     },
-    location2: {
+    theBench: {
       question: "What's my favourite fruit?",
       answer: "watermelon",
       imageUrl: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
-      imageAlt: "Next location clue",
-      locationName: "Location 2",
-      nextLocation: "location3"
+      nextLocation: "theWitch"
     },
-    location3: {
+    theWitch: {
       question: "What's my favourite drink?",
       answer: "dirty chai latte",
       imageUrl: "https://images.unsplash.com/photo-1511593358241-7eea1f3c84e5?w=800",
-      imageAlt: "Next location clue",
-      locationName: "Location 3",
-      nextLocation: "location4"
+      nextLocation: "theRock"
     },
-    location4: {
+    theRock: {
       question: "What's my favourite Disney movie?",
       answer: "Atlantis",
       imageUrl: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800",
-      imageAlt: "Final treasure location!",
-      locationName: "Final Location",
       nextLocation: null // null means this is the last location
     }
   };
@@ -48,7 +40,7 @@ const TreasureHunt = () => {
   useEffect(() => {
     const getLocationFromUrl = () => {
       const hash = window.location.hash.slice(1); // Remove the #
-      return hash || 'location1'; // Default to location1 if no hash
+      return hash || 'theSpot'; // Default to location1 if no hash
     };
 
     setCurrentLocation(getLocationFromUrl());
@@ -107,7 +99,7 @@ const TreasureHunt = () => {
           /* Question Card */
           <div className="bg-white rounded-2xl shadow-xl p-8 mb-6">
             <h2 className="text-2xl font-bold text-gray-800 mb-6">
-              Answer the riddle to reveal your next clue
+              Answer the question correctly to reveal your next clue
             </h2>
             
             <div className="bg-amber-50 border-l-4 border-amber-500 p-6 mb-6 rounded">
