@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { CheckCircle, XCircle, Map } from 'lucide-react';
 
+import location1Image from './assets/images/location1-clue.jpeg';
+import location2Image from './assets/images/location3-clue.jpeg';
+import location3Image from './assets/images/location3-clue.jpeg';
+import location4Image from './assets/images/location4-clue.jpeg';
+
 const TreasureHunt = () => {
   const [answer, setAnswer] = useState('');
   const [showImage, setShowImage] = useState(false);
@@ -13,25 +18,25 @@ const TreasureHunt = () => {
     theSpot: {
       question: "What's my favourite colour?",
       answer: "blue",
-      imageUrl: "https://images.unsplash.com/photo-1519974719765-e6559eac2575?w=800",
+      image: location1Image,
       nextLocation: "theBench"
     },
     theBench: {
       question: "What's my favourite fruit?",
       answer: "watermelon",
-      imageUrl: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+      image: location2Image,
       nextLocation: "theWitch"
     },
     theWitch: {
       question: "What's my favourite drink?",
       answer: "dirty chai latte",
-      imageUrl: "https://images.unsplash.com/photo-1511593358241-7eea1f3c84e5?w=800",
+      image: location3Image,
       nextLocation: "theRock"
     },
     theRock: {
       question: "What's my favourite Disney movie?",
       answer: "Atlantis",
-      imageUrl: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800",
+      image: location4Image,
       nextLocation: null // null means this is the last location
     }
   };
@@ -144,38 +149,26 @@ const TreasureHunt = () => {
           <div className="bg-white rounded-2xl shadow-xl p-8 mb-6">
             <div className="flex items-center gap-3 mb-6 text-green-600">
               <CheckCircle className="w-8 h-8" />
-              <h2 className="text-2xl font-bold">Correct!</h2>
+              <h2 className="text-2xl font-bold">Correct</h2>
             </div>
 
             <p className="text-gray-700 mb-6 text-lg">
               {isLastLocation 
-                ? "🎉 Congratulations! You've found the treasure!" 
-                : "Here's your clue to find the next location. Look for the QR code!"}
+                ? "🎉 Nice work Princess!" 
+                : "Here's your clue to find the next location."}
             </p>
 
             <div className="mb-6 rounded-xl overflow-hidden shadow-lg">
               <img
-                src={currentLoc.imageUrl}
-                alt={currentLoc.imageAlt}
+                src={currentLoc.image}
                 className="w-full h-auto"
               />
             </div>
 
-            {!isLastLocation && (
-              <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded">
-                <p className="text-blue-800 font-medium">
-                  📍 Use the clue in the image to find the next location and scan the QR code there!
-                </p>
-              </div>
-            )}
-
             {isLastLocation && (
               <div className="text-center p-6 bg-gradient-to-r from-amber-400 to-orange-500 rounded-lg">
                 <p className="text-white text-2xl font-bold mb-2">
-                  🏆 Treasure Found!
-                </p>
-                <p className="text-white">
-                  You've completed the treasure hunt!
+                  🏆 Snackies Found!
                 </p>
               </div>
             )}
