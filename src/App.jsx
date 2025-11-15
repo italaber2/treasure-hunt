@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { CheckCircle, XCircle, Map } from 'lucide-react';
 
 import location1Image from './assets/images/location1-clue.jpeg';
-import location2Image from './assets/images/location3-clue.jpeg';
+import location2Image from './assets/images/location2-clue.jpeg';
 import location3Image from './assets/images/location3-clue.jpeg';
 import location4Image from './assets/images/location4-clue.jpeg';
 
@@ -50,6 +50,11 @@ const TreasureHunt = () => {
 
     setCurrentLocation(getLocationFromUrl());
 
+console.log('location1Image:', location1Image);
+console.log('location2Image:', location2Image);
+console.log('location3Image:', location3Image);
+console.log('location4Image:', location4Image);
+
     // Listen for hash changes
     const handleHashChange = () => {
       setCurrentLocation(getLocationFromUrl());
@@ -70,7 +75,7 @@ const TreasureHunt = () => {
       setShowImage(true);
       setError('');
     } else {
-      setError('Incorrect answer. Try again!');
+      setError('Wrong?! You know me better than that Princess. Try again.');
       setAnswer('');
     }
   };
